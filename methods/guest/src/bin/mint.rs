@@ -14,19 +14,28 @@
 
 #![no_main]
 #![no_std]
-
 use ethabi::ethereum_types::U256;
+use ethabi::Bytes;
 use ethabi::{ParamType, Token};
 use risc0_zkvm::guest::env;
 
+#[macro_use]
+extern crate alloc;
+
 risc0_zkvm::guest::entry!(main);
 
-fn fibonacci(n: U256) -> U256 {
-    let (mut prev, mut curr) = (U256::one(), U256::one());
-    for _ in 2..=n.as_u32() {
-        (prev, curr) = (curr, prev + curr);
-    }
-    return curr;
+// fn factorize(n: U256) -> (U256, U256) {
+//     let mut divisor = 2;
+//     while n.as_u32() % divisor != 0 {
+//         divisor += 1;
+//     }
+//     let other_factor = n.as_u32() / divisor;
+//     return (U256::from(divisor), U256::from(other_factor));
+// }
+
+fn mint(n: U256) -> Bytes {
+    let text = format!("<svg height='100' width='100'><circle cx='50' cy='50' r='{}' stroke='black' stroke-width='3' fill='red' /></svg>", n);
+    return Bytes::from(text);
 }
 
 const INPUT_LEN: usize = core::mem::size_of::<U256>();
@@ -38,8 +47,9 @@ pub fn main() {
     let n: U256 = input[0].clone().into_uint().unwrap();
 
     // Run the computation.
-    let result = fibonacci(n);
+    // let (p,q) = factorize(n);
+    let minted = mint(n);
 
     // Commit the journal that will be decoded in the application contract.
-    env::commit_slice(&ethabi::encode(&[Token::Uint(n), Token::Uint(result)]));
+    env::commit_slice(&ethabi::encode(&[Token::Uint(n), Token::Bytes(minted)]));
 }

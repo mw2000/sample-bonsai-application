@@ -91,7 +91,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     // Check that the expected changes took place on the contract.
     println!("Calling HelloBonsai.fibonacci({})", args.n);
-    let result: U256 = hello_bonsai.fibonacci(U256::from(args.n)).call().await?;
+    let result: String = hello_bonsai.tokenURI(U256::from(args.n)).call().await?;
     println!(" Result: {}", result);
 
     Ok(())

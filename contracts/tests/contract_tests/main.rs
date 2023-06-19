@@ -48,14 +48,16 @@ pub async fn test_successful_contract_usage() -> Result<(), Box<dyn Error>> {
             .send()
             .await?;
 
+        let s = "<svg height='100' width='100'><circle cx='50' cy='50' r='10' stroke='black' stroke-width='3' fill='red' /></svg>";
+
         // Wait for the callback to come from Bonsai.
         let callback_log = subscription.next().await.unwrap()?;
         assert_eq!(callback_log.n, U256::from(10));
-        assert_eq!(callback_log.result, U256::from(89));
+        assert_eq!(callback_log.svg, Bytes::from(s));
 
         // Check that the expected changes took place on the contract.
-        let result: U256 = hello_bonsai.fibonacci(U256::from(10)).call().await?;
-        assert_eq!(result, U256::from(89));
+        let result: String = hello_bonsai.tokenURI(U256::from(10)).call().await?;
+        assert_eq!(result, s);
         Ok(())
     })
     .await
