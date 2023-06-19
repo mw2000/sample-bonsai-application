@@ -71,7 +71,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     // Call a function which offloads work to Bonsai.
     println!("Sending transaction for HelloBonsai.calculate_fibonacci...");
     let receipt = hello_bonsai
-        .calculate_fibonacci(U256::from(args.n))
+        .mint(U256::from(args.n))
         .send()
         .await?
         .confirmations(1)
@@ -91,7 +91,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     // Check that the expected changes took place on the contract.
     println!("Calling HelloBonsai.fibonacci({})", args.n);
-    let result: String = hello_bonsai.tokenURI(U256::from(args.n)).call().await?;
+    let result = hello_bonsai.tokenURI(U256::from(args.n)).call().await?;
     println!(" Result: {}", result);
 
     Ok(())

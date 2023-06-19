@@ -24,14 +24,14 @@ mod tests {
     use ethabi::Token;
     use risc0_zkvm::{Prover, ProverOpts};
 
-    use super::{FIBONACCI_ID, FIBONACCI_PATH};
+    use super::{MINT_ID, MINT_PATH};
 
     #[test]
     fn fibonacci() -> Result<(), Box<dyn Error>> {
         // Skip seal as it is not needed to test the guest code.
         let mut prover = Prover::new_with_opts(
-            &std::fs::read(FIBONACCI_PATH)?,
-            FIBONACCI_ID,
+            &std::fs::read(MINT_PATH)?,
+            MINT_ID,
             ProverOpts::default().with_skip_seal(true),
         )?;
 
